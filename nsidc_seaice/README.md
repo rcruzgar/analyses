@@ -5,7 +5,6 @@ Using R to analyze the sea ice extent series for the period 1978-2020.
 
 [prediction_ARIMA.ipynb](https://github.com/rcruzgar/analyses/blob/master/nsidc_seaice/prediction_ARIMA.ipynb): Building a model with ARIMA to predict the sea ice extent time series.
 
-&nbsp
 
 <p align="center">
 <img src=data/sept_seaice.jpg alt="Selected years of September Arctic Sea Ice between 2002 and 2018. Source: NSIDC.">
