@@ -12,10 +12,12 @@ pandas2ri.activate()
 mpl.use('agg')
 
 '''
-  Plotting regular-grid variables in a North Stereographic 2D-map
-  The dimensions of the input array (from RData) have to be:
-  Experiment, Time, Lat, Lon
-  Example: python MapStereo.py --exp a1q0 --obs NSIDC --var sic --freq day --start_month nov --yearb 1988 --yeare 2012 --calc bias --dayb 1 --daye 3 --colmap seismic --ub 100 --lb -100 --colsteps 1 --extmethod neither --units % --title SIC --figdir /esarchive/scratch/ruben/tempo/ --imageformat png
+  Plotting regular-grid variables in a North Stereographic map.
+  Data are obtained from RData arrays loaded with 'load_data.R' script.
+  The dimensions of the input array (from RData) are:
+  	Experiment, Time, Lat, Lon
+  Example of usage: 
+	python MapStereo.py --exp a1q0 --obs NSIDC --var sic --freq day --start_month nov --yearb 1988 --yeare 2012 --calc bias --dayb 1 --daye 3 --colmap seismic --ub 100 --lb -100 --colsteps 1 --extmethod neither --units % --title SIC --figdir /archive/user/ --imageformat png
 '''
 
 class MapStereo:
@@ -44,22 +46,22 @@ class MapStereo:
 		self.figdir = figdir 
 		self.imageformat = imageformat
 						
+	# Load the RData to obtain the array:
 	
 	def load_data(self):	
 		inputs = (self.var, self.freq, self.exp, self.obs, 
 		self.start_month, self.yearb, self.yeare, self.calc)
 		input_file = '_'.join(''.join(elems) for elems in inputs)
 	
-		# Load Data from R
 		R_object = ro.r['load'](figdir + input_file + ".RData")
-		# e.g.: 30 days, 43 lat, 360 lon			
 		
 		day1 = int(self.dayb) - 1 
 		day2 = int(self.daye)
 
 		array_loaded = pandas2ri.ri2py(ro.r[R_object[0]])[0, day1:day2, :, :] 
 		return array_loaded	
-				
+		
+	# The plotting function:		
 								
 	def map_polar(self):
 		array_loaded = self.load_data()
@@ -67,26 +69,29 @@ class MapStereo:
                 ny = array_loaded.shape[2]
                 latitude = np.linspace(47, 90, nx)
                 longitude = np.linspace(0, 360, ny)
-                # remove the empty white line of longitude
+                # Remove the empty white line of longitude
                 data, lon_c = bm.addcyclic(array_loaded, longitude)
 
+		# Just the North Pole
 		m = Basemap(projection = "npstere", boundinglat = 47, lon_0 = 0,
-                           resolution = "l", round = True) # Just the North Pole
+                           resolution = "l", round = True)
 
+		# Create a grid
                 if len(longitude.shape) == 1 and len(latitude.shape) == 1:
-                	lon_c, lat = np.meshgrid(lon_c, latitude)  # creates a grid
+                	lon_c, lat = np.meshgrid(lon_c, latitude)
                 xi, yi = m(lon_c, lat)
 
 		dayini = int(self.dayb) - 1
                 dayend = int(self.daye)
 
+		# Plot the selected days
                 for day in np.arange(dayini, dayend, 1):
 			fig = plt.figure(figsize=(8.5, 8))
 			ax = fig.add_subplot(111)
 			m.fillcontinents(color='silver')
                         m.drawcoastlines()			
 	
-			data_day = data[day, :, :] # 43x360 matrix
+			data_day = data[day, :, :]
 			
                         lb_nr = int(self.lb)
                         ub_nr = int(self.ub)
@@ -97,6 +102,7 @@ class MapStereo:
 			bnorm = mpl.colors.BoundaryNorm(collevels, ncolors=len(collevels), clip=False)
 			cf = ax.contourf(xi, yi, data_day, vmin=collevels[0], vmax=collevels[-1],
 						levels=collevels, cmap=self.colmap, norm=None, extend=self.extmethod)
+
                         cb = fig.colorbar(cf, ax=ax)
                         tick_locator = ticker.MaxNLocator(nbins=12)
                         cb.locator = tick_locator
@@ -113,16 +119,15 @@ class MapStereo:
 			
 			day_plus = day + 1						
 			plt.title('%s Day %s' % (self.title, day_plus), fontsize=24)
-
-			for c in cf.collections: # makes the plot smoother, without white lines between contours
+			
+			# Make the plot smoother, without white lines between contours
+			for c in cf.collections:
 				c.set_edgecolor("face") 
 					
 			plt.savefig('%s_%s_%s-%s_%s_%s-%s_%s_%s.%s' % (self.var[0],
 					self.freq, self.exp, self.obs, self.start_month,
 					 self.yearb, self.yeare, day_plus, self.calc,
 					  self.imageformat))
-
-	# def plot_giffs(self, plot_arg=False)
 
 
 def get_command_line_arguments():
