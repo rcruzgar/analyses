@@ -112,7 +112,7 @@ for (var in lst_var) {
         # Data have to be formatted from daily continous dimensions of satellite data to the format of seasonal predictions
         # Typically with multiple dimensions: c(model, experiment, start dates, forecast time, member, latitude, longitude)
         source('h2h.R')
-        # https://github.com/rcruzgar/analyses/tree/master/maps/h2h.R 
+        # https://github.com/rcruzgar/analyses/blob/master/maps/h2h.R
         
         s_dates = ymd(start_dates)
         nr_years = length(YEAR1:YEAR2)

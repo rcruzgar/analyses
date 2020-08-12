@@ -17,7 +17,7 @@ mpl.use('agg')
   The dimensions of the input array (from RData) are:
   	Experiment, Time, Lat, Lon
   Example of usage: 
-	python MapStereo.py --exp a1q0 --obs NSIDC --var sic --freq day --start_month nov --yearb 1988 --yeare 2012 --calc bias --dayb 1 --daye 3 --colmap seismic --ub 100 --lb -100 --colsteps 1 --extmethod neither --units % --title SIC --figdir /archive/user/ --imageformat png
+	python MapStereo.py --exp a1q0 --obs NSIDC --var sic --freq day --start_month nov --yearb 1988 --yeare 2012 --calc bias --dayb 1 --daye 3 --colmap seismic --ub 100 --lb -100 --colsteps 1 --extmethod neither --units % --title Bias --figdir /username/data --imageformat png
 '''
 
 class MapStereo:
@@ -53,7 +53,7 @@ class MapStereo:
 		self.start_month, self.yearb, self.yeare, self.calc)
 		input_file = '_'.join(''.join(elems) for elems in inputs)
 	
-		R_object = ro.r['load'](figdir + input_file + ".RData")
+		R_object = ro.r['load'](figdir + '/'  + input_file + ".RData")
 		
 		day1 = int(self.dayb) - 1 
 		day2 = int(self.daye)
