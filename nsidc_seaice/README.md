@@ -3,7 +3,7 @@ Using Python and R to analyze the sea ice extent series for the period 1978-2020
 
 [seaice_extent.ipynb](https://github.com/rcruzgar/analyses/blob/master/nsidc_seaice/seaice_extent.ipynb): R Notebook analyzing the monthly trends and anomalies.
 
-[Sequential_Prediction.ipynb](https://github.com/rcruzgar/analyses/blob/master/Sequential_Prediction.ipynb): Python Notebook that creates a sequential deep-learning model to predict the time series of daily Arctic sea ice extent.
+[Sequential_Prediction.ipynb](https://github.com/rcruzgar/analyses/blob/master/nsidc_seaice/Sequential_Prediction.ipynb): Python Notebook that creates a sequential deep-learning model to predict the time series of daily Arctic sea ice extent.
 
 [Arctic_Climate.ipynb](https://github.com/rcruzgar/analyses/blob/master/nsidc_seaice/Arctic_Climate.ipynb): Plot some the heatmap of Arctic sea ice anomalies and compares it with global temperature anomalies. Made in Python.
 
